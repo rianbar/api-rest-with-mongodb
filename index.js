@@ -1,10 +1,11 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const port = process.env.PORT || 3000;
 const routes = require('./routes');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const uri = "mongodb+srv://rianbarroso:rian.santos1@cluster0.g78ugei.mongodb.net/?retryWrites=true&w=majority";
+const uri = process.env._CON_;
 
 //setando tipo de dados da requisiçao e resposta
 app.use(bodyParser.urlencoded({ extended: false }));

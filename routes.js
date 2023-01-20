@@ -6,7 +6,7 @@ const Person = require('./Models/Person');
 routes.post('/', async (req, res) => {
     const { nome, sobrenome, ocupacao, idade } = req.body;
 
-    if(!nome || !sobrenome || !ocupacao || !idade) {
+    if(!nome || !sobrenome) {
         res.status(422).json( { error: "todos os campos são obrigatórios" })
         return
     }
