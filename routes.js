@@ -1,33 +1,33 @@
-require('dotenv').config();
 const express = require('express');
 const routes = express.Router();
-const dbName = "CRUDatabase";
-const url = process.env.CONNECTSTRING
-const colecao = "users";
-const mongodb = require('mongodb').MongoClient;
+const Person = require('./Models/Person');
 
-//start database
-mongodb.connect(url, (err, client) => {
-    if (err) throw err;
-    const dbo = client.db(dbName);
+//INSERT
+routes.post('/', async (req, res) => {
+    const { nome, sobrenome, ocupacao, idade } = req.body;
 
+    if(!nome || !sobrenome || !ocupacao || !idade) {
+        res.status(422).json( { error: "todos os campos são obrigatórios" })
+        return
+    }
 
-    //Get Objects
-    routes.get('/', (req, res) => {
-        res.send('hello world!');
-    })
-    
-    //Insert Objects
-    routes.post('/:nome/:sobrenome', (req, res) => {
-        nome = req.params.nome
-        sobrenome = req.params.sobrenome
-        
-        dbo.collection(colecao).insertOne({ nome, sobrenome }, (err, result) => {
-            if (err) throw err;
-            res.send('Objetos inseridos com sucesso!')
-            client.close();
-        })
-    })
+    const person = { nome, sobrenome, ocupacao, idade }
+
+    try {
+        await Person.create(person)
+        res.status(200).json({ message: "Pessoa inserida com sucesso!" })
+    } catch(e) {
+        res.status(500).json({ error: e })
+    }
+})
+
+//SELECT
+routes.get('/', async (req, res) => {
+    await Person.find({}, (err, docs) => {
+        if (err) throw err;
+        res.status(200).json(docs);
+    });
+
 })
 
 module.exports = routes
