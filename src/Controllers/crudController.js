@@ -1,7 +1,6 @@
 const Person = require('../Models/Person')
-const checkToken = require('../Middlewares/checkTokenMiddleware');
 
-exports.crudCreate = checkToken, async (req, res) => {
+exports.crudCreate = async (req, res) => {
     const { nome, sobrenome, ocupacao, idade } = req.body;
     if(!nome || !sobrenome) return res.status(422).json( { error: "os campos nome e sobrenome são obrigatórios" });
 
@@ -47,7 +46,7 @@ exports.crudRead = (req, res) => {
     })
 };
 
-exports.crudFindOne = checkToken, (req, res) => {
+exports.crudFindOne = (req, res) => {
      Person.findOne({ _id: req.params.id }, (err, doc) => {
      if (err) return res.status(500).json({ message: err});
      if (Object.keys(doc).length == 0) return req.status(404).json({ message: "usuário não existe" });
@@ -69,7 +68,7 @@ exports.crudFindOne = checkToken, (req, res) => {
     })
  };
 
- exports.crudUpdate = checkToken, async (req, res) => {
+ exports.crudUpdate = async (req, res) => {
     if(Object.keys(req.body).length == 0) return res.json({ message: "Você precisa enviar algum valor!" });
     const paramId = { _id: req.params.id };
     const bodyUpdate = req.body
@@ -90,7 +89,7 @@ exports.crudFindOne = checkToken, (req, res) => {
     }
 }
 
-exports.crudDelete = checkToken, async (req, res) => {
+exports.crudDelete = async (req, res) => {
     if(Object.keys(req.body).length == 0) return res.json({ message: "Você precisa enviar algum valor!" });
     
     const deleteUser = await Person.deleteOne(req.body);
