@@ -1,10 +1,12 @@
 const express = require('express');
 const routes = express.Router();
-const Person = require('./Models/Person');
+const Person = require('./src/Models/Person');
+const authController = require('./src/Controllers/authController');
+const checkToken = require('./src/Middlewares/checkTokenMiddleware');
 
 
 //INSERT
-routes.post('/', async (req, res) => {
+routes.post('/', checkToken, async (req, res) => {
     const { nome, sobrenome, ocupacao, idade } = req.body;
     if(!nome || !sobrenome) return res.status(422).json( { error: "os campos nome e sobrenome são obrigatórios" });
 
@@ -54,7 +56,7 @@ routes.get('/', (req, res) => {
 
 
 //FIND ONE
-routes.get('/:id', async (req, res) => {
+routes.get('/:id', checkToken, async (req, res) => {
    const docFind = await Person.findOne({ _id: req.params.id }, (err, doc) => {
     if (err) return res.status(500).json({ message: err});
     if (Object.keys(doc).length == 0) return req.status(404).json({ message: "usuário não existe" });
@@ -78,7 +80,7 @@ routes.get('/:id', async (req, res) => {
 
 
 //UPDADE
-routes.patch('/update/:id', async (req, res) => {
+routes.patch('/update/:id', checkToken, async (req, res) => {
     if(Object.keys(req.body).length == 0) return res.json({ message: "Você precisa enviar algum valor!" });
     const paramId = { _id: req.params.id };
     const bodyUpdate = req.body
@@ -101,7 +103,7 @@ routes.patch('/update/:id', async (req, res) => {
 
 
 //DELETE
-routes.delete('/delete', async (req, res) => {
+routes.delete('/delete', checkToken, async (req, res) => {
     if(Object.keys(req.body).length == 0) return res.json({ message: "Você precisa enviar algum valor!" });
     
     const deleteUser = await Person.deleteOne(req.body);
@@ -122,6 +124,11 @@ routes.delete('/delete', async (req, res) => {
     }
     res.status(200).json(response)
 })
+
+//Authenticatoin Routes
+
+routes.post('/auth/register', authController.apiRegister);
+routes.post('/auth/login', authController.apiLogin);
 
 
 module.exports = routes
