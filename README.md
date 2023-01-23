@@ -36,4 +36,4 @@ primeiramente é necessário instalar o `Postman` na sua máquina para fazer as 
 * No crudDelete, será necessário somente o envio de um ou mais campos no body da requisição no formato `JSON` especificando qual ou quais elementos serão deletados. **Lembrando que o método delete irá apagar todos os elementos que forem compatíveis com os campos inseridos**
 
 ## Como utilizar o token:
-* Um token será disponibilizado para cada usuário no ato do login, para utiliza-lo você precisa somente copiar e colar na área de `Authentication\Bearer token` no `Postman`
+* Um token será disponibilizado para cada usuário no ato do login, para utiliza-lo você precisa somente copiar e colar na área de `Authentication\Bearer token` no `Postman` a cada requisição que for feita ao servidor.
